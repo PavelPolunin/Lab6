@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using WorkWithWord.HelperClasses;
 using WpfApp6.ModelClasses;
+using Microsoft.Office.Interop.Word;
 
 namespace WpfApp6
 {
@@ -96,6 +97,34 @@ namespace WpfApp6
             }
         }
 
-
+        private void CreateDocument(string directorypath, Users users, Auto auto)
+        {
+            var today = DateTime.Now.ToShortDateString();
+            WordHelper word = new WordHelper("ContractSale.docx");
+            var items = new Dictionary<string, string>
+            {
+                {"<Today>", today },
+                {"<FullName>", users.FullName }, // ФИО
+                {"<Date0fBirth>", users.DateOfBirth.Value.ToShortDateString() }, // Дата рождения
+                {"<Adress>", users.Adress },
+                {"<PSeria>", users.PSeria.ToString() }, // Серия паспорта
+                {"<PNumber>", users.PNumber.ToString() }, // Номер паспорта
+                {"<PVidan>", users.PVidan },
+                {"<ModelV>", auto.Model },
+                {"<CategoryV>", auto.Category },
+                {"<TypeV>", auto.TypeV },
+                {"<VIN>", auto.VIN },
+                {"<RegistrationMark>", auto.RegistrationMark }, // Регистрационный знак
+                {"<YearV>", auto.YearOfRelease.Value.Year.ToString() }, // Год выпуска
+                {"<EngineV>", auto.EngineNumber }, // Номер двигателя
+                {"<ChassisV>", auto.Chassis },
+                {"<BodyworkV>", auto.Bodywork },
+                {"<ColorV>", auto.Color },
+                {"<SeriaPV>", auto.SeriaPasport }, // Серия ПТС
+                {"<NumberPV>", auto.NumbePasport }, // Номер ПТС
+                {"<VidanPV>", auto.VidanPasport } // Кем выдан ПТС
+            };
+            word.Process(items, directorypath);
+        }
     }
 }
